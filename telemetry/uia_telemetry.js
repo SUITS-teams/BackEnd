@@ -121,11 +121,11 @@ function supplyWaterStatus(dt, uiaControls, uiaOldSimState) {
 		water1 = 'CLOSE'
 	//EV2 Waste	
 	if (status2)
-		status2 = 'OPEN'
+		water2 = 'OPEN'
 	else
-		status2 = 'CLOSE'
+		water2 = 'CLOSE'
 
-	console.log(status2)
+	console.log(water2)
 	
 	return {water1,water2}
 }
@@ -180,7 +180,7 @@ function dPump(dt, { depress_pump }, uiaOldSimState) {
 }
 
 function o2Vent(dt, { O2_vent }, uiaOldSimState) {
-	let vent = uiaOldSimState.O2_vent
+	let vent = uiaOldSimState.o2_vent
 	if (O2_vent)
 		vent = 'VENT'
 	
