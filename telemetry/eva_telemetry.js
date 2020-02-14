@@ -26,11 +26,11 @@ module.exports.simulationStep = function(dt, controls, failure, oldSimState){
 			p_h2o_l: pressureWaterLiquid(dt, controls, oldSimState),
 			p_sop: pressureSOP(dt, controls, oldSimState),
 			rate_sop: rateSOP(dt, controls, oldSimState),
-			t_oxygenPrimary: oxygenLife(dt, controls, oldSimState).t_oxygenPrimary,
-			t_oxygenSec: oxygenLife(dt, controls, oldSimState).t_oxygenSecondary,
-			ox_primary: oxygenLife(dt, controls, oldSimState).oxPrimar_out,
-			ox_secondary: oxygenLife(dt, controls, oldSimState).oxSecondary_out,
-			t_oxygen:oxygenLife(dt, controls, oldSimState).o2_time,
+			t_oxygenPrimary: oxygenLife(dt, controls, failure, oldSimState).t_oxygenPrimary,
+			t_oxygenSec: oxygenLife(dt, controls, failure, oldSimState).t_oxygenSecondary,
+			ox_primary: oxygenLife(dt, controls, failure, oldSimState).oxPrimar_out,
+			ox_secondary: oxygenLife(dt, controls, failure, oldSimState).oxSecondary_out,
+			t_oxygen: oxygenLife(dt, controls, failure, oldSimState).o2_time,
 			cap_water: waterLife(dt, controls, oldSimState).cap_water,
 			t_water: waterLife(dt, controls, oldSimState).t_water
 	
@@ -77,12 +77,20 @@ function capacityBattery(){
 	return cap_battery.toFixed(0) 
 }
 
-function oxygenLife(dt, { O2_switch }, oldSimState){
+function oxygenLife(dt, { O2_switch }, {O2_error}, oldSimState){
+	var ox_drainRate = 0;
+	if(O2_switch === false && O2_error === true)
+	{
+		ox_drainRate = 10000 / (3*60*60)
+	}
+	else{
+		ox_drainRate= 100 / ( 3 * 60 * 60) // 3 hours of life (%/s)
+	}
 
-	const ox_drainRate= 100 / ( 3 * 60 * 60) // 3 hours of life (%/s)
 	const amountDrained = ox_drainRate * ( dt / 1000)// %
 	let t_oxygenPrimary = oldSimState.t_oxygenPrimary
 	let t_oxygenSecondary = oldSimState.t_oxygenSec
+
 
 	if (O2_switch === false){
 		t_oxygenPrimary = ( t_oxygenPrimary - amountDrained ) // %
@@ -187,12 +195,12 @@ function velocFan(dt, { fan_switch }, { fan_error }, oldSimState){
 	return v_fan.toFixed(0)
 }
 
-function pressureOxygen(dt, { O2_switch }, {O2_error}, oldSimState){
+function pressureOxygen(dt, { switch3 }, {Pres_error}, oldSimState){
 	let p_o2 = oldSimState.p_o2
 	let p_o2_avg = 0;
 	let oxPressure_max = 780 
 	let oxPressure_min = 770 
-	if (O2_error === true && O2_switch === false){
+	if (Pres_error === true && switch3 === false){
 		if (p_o2 > 100)
 			p_o2 = p_o2 - 25
 		return p_o2.toFixed(2)
