@@ -16,7 +16,7 @@ module.exports.simulationStep = function(dt, controls, failure, oldSimState){
 			p_suit:pressureSuit(dt, controls, oldSimState), 
 			t_sub: tempSub(dt, controls, oldSimState),
 			v_fan: velocFan(dt, controls, failure, oldSimState),
-			p_o2: pressureOxygen(dt, controls, oldSimState),
+			p_o2: pressureOxygen(dt, controls, failure, oldSimState),
 			rate_o2: rateOxygen(dt, controls, oldSimState),
 			cap_battery: capacityBattery(dt, controls, oldSimState),
 			batteryPercent, 
@@ -187,12 +187,20 @@ function velocFan(dt, { fan_switch }, { fan_error }, oldSimState){
 	return v_fan.toFixed(0)
 }
 
-function pressureOxygen(){
-	const oxPressure_max = 780 
-	const oxPressure_min = 770 
-	const p_o2 = Math.random() * (oxPressure_max - oxPressure_min) + oxPressure_min
-	let p_o2_avg = (p_o2 + oxPressure_max + oxPressure_min ) / 3
-
+function pressureOxygen(dt, { O2_switch }, {O2_error}, oldSimState){
+	let p_o2 = oldSimState.p_o2
+	let p_o2_avg = 0;
+	let oxPressure_max = 780 
+	let oxPressure_min = 770 
+	if (O2_error === true && O2_switch === false){
+		if (p_o2 > 100)
+			p_o2 = p_o2 - 25
+		return p_o2.toFixed(2)
+	}
+	else {
+	 p_o2 = Math.random() * (oxPressure_max - oxPressure_min) + oxPressure_min
+	p_o2_avg = (p_o2 + oxPressure_max + oxPressure_min ) / 3
+	}
 	return p_o2_avg.toFixed(2) 
 }
 

@@ -67,7 +67,8 @@ module.exports.start = async function(){
 		controlID = controls._id
 		const failure = await SimulationFailure.create({
 			started_at,
-			fan_error: false, 
+			fan_error: false,
+			O2_error: false, 
 		})
 		failureID = failure._id
 
@@ -153,7 +154,7 @@ async function step(){
 		Object.assign(simState, newSimState)
 		await simState.save()
 	}
-	catch(error){
+	catch(error){ 
 		console.error('failed error')
 		console.error(error.toString())
 	}
