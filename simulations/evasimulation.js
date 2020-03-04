@@ -68,8 +68,6 @@ module.exports.start = async function(){
 		const failure = await SimulationFailure.create({
 			started_at,
 			fan_error: false,
-			O2_error: false, 
-			Pres_error: false,
 		})
 		failureID = failure._id
 
