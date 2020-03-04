@@ -79,13 +79,9 @@ function capacityBattery(){
 
 function oxygenLife(dt, { O2_switch }, {O2_error}, oldSimState){
 	var ox_drainRate = 0;
-	if(O2_switch === false && O2_error === true)
-	{
-		ox_drainRate = 10000 / (3*60*60)
-	}
-	else{
+
 		ox_drainRate= 100 / ( 3 * 60 * 60) // 3 hours of life (%/s)
-	}
+	
 
 	const amountDrained = ox_drainRate * ( dt / 1000)// %
 	let t_oxygenPrimary = oldSimState.t_oxygenPrimary
@@ -200,15 +196,8 @@ function pressureOxygen(dt, { switch3 }, {Pres_error}, oldSimState){
 	let p_o2_avg = 0;
 	let oxPressure_max = 780 
 	let oxPressure_min = 770 
-	if (Pres_error === true && switch3 === false){
-		if (p_o2 > 100)
-			p_o2 = p_o2 - 25
-		return p_o2.toFixed(2)
-	}
-	else {
 	 p_o2 = Math.random() * (oxPressure_max - oxPressure_min) + oxPressure_min
 	p_o2_avg = (p_o2 + oxPressure_max + oxPressure_min ) / 3
-	}
 	return p_o2_avg.toFixed(2) 
 }
 
