@@ -5,7 +5,7 @@ var app = express()
 const simulationRouter = require('./routes/evarouter')
 const uiaSimulationRouter = require('./routes/uiarouter')
 //Database connector
-mongoose.connect('mongodb://localhost/spacesuit')
+mongoose.connect('mongodb+srv://SUITS-tech_team:Tvstudent1!@cluster0.rqtoy.mongodb.net/test?retryWrites=true&w=majority')
 app.use('/api/simulation', simulationRouter)
 app.use('/api/simulation/', uiaSimulationRouter)
 

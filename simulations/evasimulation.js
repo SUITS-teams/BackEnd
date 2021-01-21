@@ -12,7 +12,8 @@ let holdID = null
 let lastTimestamp = null
 
 function isRunning() {
-	return simStateID !== null && controlID !== null && failureID !== null && holdID !== null
+	return simStateID !== null && controlID !== null && failureID !== null
+	//return simStateID !== null && controlID !== null && failureID !== null && holdID !== null
 }
 
 function isPaused() {
